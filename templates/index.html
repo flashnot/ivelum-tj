@@ -1,0 +1,88 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Ivelum test task :: Index</title>
+        <style type="text/css">
+            body {
+                font-family: Verdana, sans-serif;
+                font-size: 14px;
+            }
+            a {
+                color: blue;
+            }
+            a:hover {
+                color: red;
+            }
+            .black {
+                color: black;
+            }
+            .possibilities {
+                color: gray;
+            }
+            .comment {
+                color: gray;
+                font-style: italic;
+                font-size: 90%;
+            }
+            .important-mark {
+                color: red;
+                font-size: 10px;
+                vertical-align: super;
+            }
+        </style>
+    </head>
+    <body>
+        <p>Hello. Django admin <span class="comment">(for sign up use test:test)</span> is <a href="/admin/" target="_blank">here</a>, also you can:</p>
+        <ul class="possibilities">
+            <li>GET <a href="/api/v1/task/" target="_blank">/api/v1/task</a> - Get all my task</li>
+            <li>POST<span class="important-mark">*</span> <span class="black">/api/v1/task</span> - Create new tasks</li>
+            <li>GET <span class="black">/api/v1/task/{id}</span> - View task detail</li>
+            <li>GET <span class="black">/api/v1/task/{id}/status</span> - View task status</li>
+            <li>GET <span class="black">/api/v1/task/{id}/result</span> - View task result</li>
+        </ul>
+
+        {% if isAuth %}
+            , or <a href="/api-auth/logout/?next=/api-auth/login/">Logout</a>
+        {% else %}
+            , but you need <a href="/api-auth/login/">Login</a>
+        {% endif %}
+
+        <p>
+            <span class="important-mark">*</span>  You must send post request with one require parameter - `input_param`. `input_param` is present pseudo input information for task worker. <br>
+            For example start/create one (in second example three) task with bash and curl:
+            <ul>
+                <li>curl -X POST http://yourhost/api/v1/task/ -d "input_param=qwerty" -u test:test</li>
+                <li>curl -X POST http://yourhost/api/v1/task/ -d "input_param[]=asd&input_param[]=zxc&input_param[]=123" -u test:test</li>
+            </ul>
+            <br> Or with jQuery: <br><br>
+            <pre>
+            var username = 'test';
+            var password = 'test';
+
+            function make_base_auth(user, password) {
+              var tok = user + ':' + password;
+              var hash = btoa(tok);
+              return "Basic " + hash;
+            }
+            $.ajax
+              ({
+                type: "POST",
+                url: "http://yourhost/api/v1/task/",
+                dataType: 'json',
+                async: false,
+                data: 'input_param=ZZZ',
+                beforeSend: function (xhr){
+                    xhr.setRequestHeader('Authorization', make_base_auth(username, password));
+                },
+                success: function (){
+                    alert('OK!');
+                }
+            });
+            </pre>
+        </p>
+        <br>
+        <p>
+            <span class="important-mark">*</span> Recommendation: if possible, use https
+        </p>
+    </body>
+</html>
